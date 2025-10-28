@@ -39,22 +39,20 @@
         overflow: hidden;
       }
 
-      /* --- 2. CAMBIO: Barra de Progreso (NUEVO DISEÑO: Stepper) --- */
+      /* --- 2. Barra de Progreso (Stepper) --- */
       .progress-bar {
         display: flex;
-        justify-content: space-between; /* Distribuye los pasos */
-        align-items: flex-start; /* Alinea al inicio */
-        padding: 2.5rem 4rem; /* Padding para que no toque los bordes */
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 2.5rem 4rem;
         border-bottom: 1px solid var(--gris-borde);
         background-color: #fff;
         position: relative;
       }
-
-      /* La línea que conecta los pasos (detrás) */
       .progress-bar::before {
         content: "";
         position: absolute;
-        top: calc(2.5rem + 20px); /* Alineado con el centro de los círculos */
+        top: calc(2.5rem + 20px);
         left: 5rem;
         right: 5rem;
         height: 2px;
@@ -62,28 +60,25 @@
         transform: translateY(-50%);
         z-index: 1;
       }
-
       .progress-step {
         display: flex;
-        flex-direction: column; /* Icono/Número arriba, texto abajo */
+        flex-direction: column;
         align-items: center;
-        gap: 0.65rem; /* Espacio entre círculo y texto */
+        gap: 0.65rem;
         font-size: 0.85rem;
         font-weight: 500;
         color: var(--gris-sutil);
         cursor: pointer;
         transition: all 0.2s;
         position: relative;
-        z-index: 2; /* Encima de la línea */
-        width: 100px; /* Ancho fijo para cada paso */
+        z-index: 2;
+        width: 100px;
         text-align: center;
-        background-color: #fff; /* Fondo para tapar la línea */
+        background-color: #fff;
       }
       .progress-step span {
         line-height: 1.3;
       }
-
-      /* El círculo del paso */
       .step-icon {
         width: 40px;
         height: 40px;
@@ -94,10 +89,9 @@
         background-color: #fff;
         border: 2px solid var(--gris-borde);
         transition: all 0.2s;
-        font-size: 1.1rem; /* Más grande para los números */
+        font-size: 1.1rem;
         font-weight: 600;
       }
-
       .progress-step svg {
         width: 20px;
         height: 20px;
@@ -105,7 +99,6 @@
         color: var(--gris-sutil);
         transition: color 0.2s;
       }
-
       .progress-step:not(.active):hover .step-icon {
         border-color: var(--verde-principal);
       }
@@ -115,8 +108,6 @@
       .progress-step:not(.active):hover svg {
         color: var(--verde-principal);
       }
-
-      /* Estado Activo */
       .progress-step.active .step-icon {
         background-color: var(--verde-principal);
         border-color: var(--verde-principal);
@@ -129,12 +120,10 @@
         color: var(--verde-principal);
         font-weight: 700;
       }
-
-      /* Estado "Completado" (pasos anteriores al activo) */
       .progress-step.completed .step-icon {
         background-color: #fff;
         border-color: var(--verde-principal);
-        color: var(--verde-principal); /* Color para números completados */
+        color: var(--verde-principal);
       }
       .progress-step.completed svg {
         color: var(--verde-principal);
@@ -142,13 +131,11 @@
       .progress-step.completed span {
         color: var(--gris-texto);
       }
-      /* -------------------------------------------------------- */
 
       /* --- 3. Contenido de los Pasos --- */
       .wizard-content {
         padding: 3rem 4rem;
       }
-
       .step-content {
         display: none;
       }
@@ -167,7 +154,7 @@
         }
       }
 
-      /* --- 4. Campos de Formulario (Modernizados) --- */
+      /* --- 4. Campos de Formulario --- */
       h3 {
         font-size: 1.85rem;
         font-weight: 700;
@@ -177,18 +164,15 @@
         border-left: 5px solid var(--verde-acento);
         padding-left: 1rem;
       }
-
       .form-group {
         margin-bottom: 2rem;
       }
-
       .form-group label {
         display: block;
         font-weight: 600;
         margin-bottom: 0.6rem;
         color: #444;
       }
-
       .form-group input[type="text"],
       .form-group textarea {
         width: 100%;
@@ -200,19 +184,16 @@
         font-family: inherit;
         transition: border-color 0.2s, box-shadow 0.2s;
       }
-
       .form-group input[type="text"]:focus,
       .form-group textarea:focus {
         border-color: var(--verde-principal);
         box-shadow: 0 0 0 4px rgba(4, 120, 53, 0.1);
         outline: none;
       }
-
       .form-group input:required:invalid,
       .form-group textarea:required:invalid {
         border-color: var(--verde-acento);
       }
-
       .form-group textarea {
         min-height: 160px;
         resize: vertical;
@@ -255,7 +236,7 @@
         margin-top: 0.5rem;
       }
 
-      /* --- 5. Estilos para items dinámicos (Tarjetas) --- */
+      /* --- 5. Estilos para items dinámicos --- */
       .dynamic-list {
         border: none;
         padding: 0;
@@ -271,7 +252,6 @@
         position: relative;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
       }
-
       .remove-button {
         position: absolute;
         top: 1.5rem;
@@ -296,7 +276,6 @@
         background-color: var(--verde-acento);
         transform: scale(1.1);
       }
-
       .dynamic-item input[type="text"],
       .dynamic-item textarea {
         width: 100%;
@@ -311,9 +290,8 @@
         margin-bottom: 0.5rem;
       }
       .dynamic-item textarea {
-        padding-right: 1rem; /* Reset padding */
+        padding-right: 1rem;
       }
-
       .add-button {
         display: inline-flex;
         align-items: center;
@@ -339,7 +317,7 @@
         height: 18px;
       }
 
-      /* --- 6. Navegación (Anterior/Siguiente) --- */
+      /* --- 6. Navegación --- */
       .wizard-navigation {
         display: flex;
         justify-content: space-between;
@@ -347,7 +325,6 @@
         border-top: 1px solid var(--gris-borde);
         background-color: #fff;
       }
-
       .wizard-button {
         background-color: var(--gris-sutil);
         color: white;
@@ -363,17 +340,15 @@
         transform: translateY(-2px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
       }
-
       .wizard-button#next-btn,
       .wizard-button#finish-btn {
         background-color: var(--verde-acento);
       }
       .wizard-button#next-btn:hover,
       .wizard-button#finish-btn:hover {
-        background-color: #6c9f02; /* Tono más oscuro de acento */
+        background-color: #6c9f02;
         box-shadow: 0 6px 12px rgba(127, 188, 3, 0.3);
       }
-
       .wizard-button:disabled {
         background-color: #ccc;
         cursor: not-allowed;
@@ -536,13 +511,14 @@
           <span>Bibliografía</span>
         </div>
       </div>
+
       <form id="wizard-form" onsubmit="return false;">
         <div class="wizard-content">
           <div id="step-1" class="step-content active">
             <h3>Paso 1: Portada</h3>
             <div class="form-group">
-              <label for="titulo">Título de la Portada</label>
-              <input
+              <label for="titulo">Título de la Portada</label
+              ><input
                 type="text"
                 id="titulo"
                 placeholder="Ej: Conceptos básicos de la administración"
@@ -550,8 +526,8 @@
               />
             </div>
             <div class="form-group">
-              <label for="subtitulo">Subtítulo (Materia)</label>
-              <input
+              <label for="subtitulo">Subtítulo (Materia)</label
+              ><input
                 type="text"
                 id="subtitulo"
                 placeholder="Ej: Fundamentos de Administración Transversal"
@@ -559,12 +535,11 @@
               />
             </div>
             <div class="form-group file-upload-group">
-              <label for="img-portada">
-                <svg><use href="#icon-upload" /></svg>
-                <span>Subir Imagen de Portada (Opcional, 16:9)</span>
-                <span id="file-name-portada" class="file-name"></span>
-              </label>
-              <input
+              <label for="img-portada"
+                ><svg><use href="#icon-upload" /></svg
+                ><span>Subir Imagen de Portada (Opcional, 16:9)</span
+                ><span id="file-name-portada" class="file-name"></span></label
+              ><input
                 type="file"
                 id="img-portada"
                 accept="image/*"
@@ -572,12 +547,11 @@
               />
             </div>
           </div>
-
           <div id="step-2" class="step-content">
             <h3>Paso 2: Introducción</h3>
             <div class="form-group">
-              <label for="texto-intro">Texto de la Introducción</label>
-              <textarea
+              <label for="texto-intro">Texto de la Introducción</label
+              ><textarea
                 id="texto-intro"
                 rows="10"
                 placeholder="Escribe aquí la introducción..."
@@ -585,37 +559,33 @@
               ></textarea>
             </div>
           </div>
-
           <div id="step-3" class="step-content">
             <h3>Paso 3: Conceptos Clave</h3>
             <div id="conceptos-list" class="dynamic-list"></div>
             <button id="add-concepto" class="add-button" type="button">
-              <svg><use href="#icon-plus" /></svg>
-              <span>Añadir Concepto</span>
+              <svg><use href="#icon-plus" /></svg><span>Añadir Concepto</span>
             </button>
           </div>
-
           <div id="step-4" class="step-content">
             <h3>Paso 4: Ensayo 1</h3>
             <div class="form-group">
-              <label for="titulo-ensayo1">Título del Ensayo 1</label>
-              <input
+              <label for="titulo-ensayo1">Título del Ensayo 1</label
+              ><input
                 type="text"
                 id="titulo-ensayo1"
                 placeholder="Ej: Fundamentos de la administración"
               />
             </div>
             <div class="form-group">
-              <label for="texto-ensayo1">Texto del Ensayo 1</label>
-              <textarea id="texto-ensayo1" rows="8"></textarea>
+              <label for="texto-ensayo1">Texto del Ensayo 1</label
+              ><textarea id="texto-ensayo1" rows="8"></textarea>
             </div>
             <div class="form-group file-upload-group">
-              <label for="img-ensayo1">
-                <svg><use href="#icon-upload" /></svg>
-                <span>Subir Imagen (Opcional)</span>
-                <span id="file-name-ensayo1" class="file-name"></span>
-              </label>
-              <input
+              <label for="img-ensayo1"
+                ><svg><use href="#icon-upload" /></svg
+                ><span>Subir Imagen (Opcional)</span
+                ><span id="file-name-ensayo1" class="file-name"></span></label
+              ><input
                 type="file"
                 id="img-ensayo1"
                 accept="image/*"
@@ -623,28 +593,26 @@
               />
             </div>
           </div>
-
           <div id="step-5" class="step-content">
             <h3>Paso 5: Ensayo 2</h3>
             <div class="form-group">
-              <label for="titulo-ensayo2">Título del Ensayo 2</label>
-              <input
+              <label for="titulo-ensayo2">Título del Ensayo 2</label
+              ><input
                 type="text"
                 id="titulo-ensayo2"
                 placeholder="Ej: La organización como sistema"
               />
             </div>
             <div class="form-group">
-              <label for="texto-ensayo2">Texto del Ensayo 2</label>
-              <textarea id="texto-ensayo2" rows="8"></textarea>
+              <label for="texto-ensayo2">Texto del Ensayo 2</label
+              ><textarea id="texto-ensayo2" rows="8"></textarea>
             </div>
             <div class="form-group file-upload-group">
-              <label for="img-ensayo2">
-                <svg><use href="#icon-upload" /></svg>
-                <span>Subir Imagen (Opcional)</span>
-                <span id="file-name-ensayo2" class="file-name"></span>
-              </label>
-              <input
+              <label for="img-ensayo2"
+                ><svg><use href="#icon-upload" /></svg
+                ><span>Subir Imagen (Opcional)</span
+                ><span id="file-name-ensayo2" class="file-name"></span></label
+              ><input
                 type="file"
                 id="img-ensayo2"
                 accept="image/*"
@@ -652,28 +620,26 @@
               />
             </div>
           </div>
-
           <div id="step-6" class="step-content">
             <h3>Paso 6: Ensayo 3</h3>
             <div class="form-group">
-              <label for="titulo-ensayo3">Título del Ensayo 3</label>
-              <input
+              <label for="titulo-ensayo3">Título del Ensayo 3</label
+              ><input
                 type="text"
                 id="titulo-ensayo3"
                 placeholder="Ej: Recurso humano y liderazgo"
               />
             </div>
             <div class="form-group">
-              <label for="texto-ensayo3">Texto del Ensayo 3</label>
-              <textarea id="texto-ensayo3" rows="8"></textarea>
+              <label for="texto-ensayo3">Texto del Ensayo 3</label
+              ><textarea id="texto-ensayo3" rows="8"></textarea>
             </div>
             <div class="form-group file-upload-group">
-              <label for="img-ensayo3">
-                <svg><use href="#icon-upload" /></svg>
-                <span>Subir Imagen (Opcional)</span>
-                <span id="file-name-ensayo3" class="file-name"></span>
-              </label>
-              <input
+              <label for="img-ensayo3"
+                ><svg><use href="#icon-upload" /></svg
+                ><span>Subir Imagen (Opcional)</span
+                ><span id="file-name-ensayo3" class="file-name"></span></label
+              ><input
                 type="file"
                 id="img-ensayo3"
                 accept="image/*"
@@ -681,21 +647,18 @@
               />
             </div>
           </div>
-
           <div id="step-7" class="step-content">
             <h3>Paso 7: Conclusiones</h3>
             <div class="form-group">
-              <label for="texto-conclusiones">Texto de las Conclusiones</label>
-              <textarea id="texto-conclusiones" rows="10" required></textarea>
+              <label for="texto-conclusiones">Texto de las Conclusiones</label
+              ><textarea id="texto-conclusiones" rows="10" required></textarea>
             </div>
           </div>
-
           <div id="step-8" class="step-content">
             <h3>Paso 8: Bibliografía</h3>
             <div id="biblio-list" class="dynamic-list"></div>
             <button id="add-biblio" class="add-button" type="button">
-              <svg><use href="#icon-plus" /></svg>
-              <span>Añadir Referencia</span>
+              <svg><use href="#icon-plus" /></svg><span>Añadir Referencia</span>
             </button>
           </div>
         </div>
@@ -723,8 +686,6 @@
       // --- 1. CONFIGURACIÓN INICIAL ---
       let currentStep = 1;
       const totalSteps = 8;
-
-      // Almacenamiento de datos de imagen (para leerlos como DataURL)
       const imageStore = {
         portada: null,
         ensayo1: null,
@@ -733,7 +694,6 @@
       };
 
       // --- 2. NAVEGACIÓN DEL ASISTENTE ---
-
       const wizardForm = document.getElementById("wizard-form");
       const prevBtn = document.getElementById("prev-btn");
       const nextBtn = document.getElementById("next-btn");
@@ -741,54 +701,30 @@
       const progressSteps = document.querySelectorAll(".progress-step");
       const stepContents = document.querySelectorAll(".step-content");
 
-      // --- CAMBIO: Nueva función showStep ---
       function showStep(stepNumber) {
-        currentStep = stepNumber; // Actualizar currentStep globalmente
-
+        currentStep = stepNumber;
         progressSteps.forEach((step, index) => {
           const stepNum = index + 1;
-          const stepEl = step; // Renombrar para claridad
-
-          // Quitar clases de estado
-          stepEl.classList.remove("active", "completed");
-
-          if (stepNum === currentStep) {
-            // Es el paso actual
-            stepEl.classList.add("active");
-          } else if (stepNum < currentStep) {
-            // Es un paso ya completado
-            stepEl.classList.add("completed");
-          }
-          // Si stepNum > currentStep, no se añade ninguna clase (estado futuro)
+          step.classList.remove("active", "completed");
+          if (stepNum === currentStep) step.classList.add("active");
+          else if (stepNum < currentStep) step.classList.add("completed");
         });
-
         stepContents.forEach((content, index) => {
-          const stepNum = index + 1;
-          const contentEl = content;
-
-          if (stepNum === currentStep) {
-            contentEl.classList.add("active");
-          } else {
-            contentEl.classList.remove("active");
-          }
+          content.classList.toggle("active", index + 1 === currentStep);
         });
-
-        // Actualiza los botones
         prevBtn.disabled = currentStep === 1;
         prevBtn.style.display = currentStep === 1 ? "none" : "block";
         nextBtn.style.display = currentStep === totalSteps ? "none" : "block";
         finishBtn.style.display = currentStep === totalSteps ? "block" : "none";
       }
-      // --- FIN CAMBIO showStep ---
 
-      // Validación de Errores
       function validateStep(stepNumber) {
         const currentStepFields = document.querySelectorAll(
           `#step-${stepNumber} [required]`
         );
         for (const field of currentStepFields) {
           if (!field.checkValidity()) {
-            field.reportValidity(); // Muestra el mensaje de error del navegador
+            field.reportValidity();
             return false;
           }
         }
@@ -796,23 +732,15 @@
       }
 
       nextBtn.addEventListener("click", () => {
-        // Valida el paso actual antes de avanzar
-        if (validateStep(currentStep) && currentStep < totalSteps) {
+        if (validateStep(currentStep) && currentStep < totalSteps)
           showStep(currentStep + 1);
-        }
       });
-
       prevBtn.addEventListener("click", () => {
-        if (currentStep > 1) {
-          showStep(currentStep - 1);
-        }
+        if (currentStep > 1) showStep(currentStep - 1);
       });
-
-      // Navegación con la barra de progreso
       progressSteps.forEach((step) => {
         step.addEventListener("click", () => {
           const stepToGo = parseInt(step.dataset.step, 10);
-          // Solo permite ir a pasos anteriores, o al siguiente si el actual es válido
           if (
             stepToGo < currentStep ||
             (stepToGo === currentStep + 1 && validateStep(currentStep))
@@ -821,86 +749,57 @@
           }
         });
       });
-
-      // Inicializa el estado de los botones
-      showStep(currentStep);
+      showStep(currentStep); // Initialize
 
       // --- 3. FUNCIONALIDAD DE LISTAS DINÁMICAS ---
-
-      // Conceptos Clave
       const conceptosList = document.getElementById("conceptos-list");
       document.getElementById("add-concepto").addEventListener("click", () => {
         const item = document.createElement("div");
         item.className = "dynamic-item";
-        item.innerHTML = `
-                <button type="button" class="remove-button" title="Eliminar concepto">&times;</button>
-                <input type="text" class="concepto-titulo" placeholder="Título del Concepto (Ej: Administración)" required>
-                <textarea class="concepto-desc" placeholder="Descripción del concepto..." required></textarea>
-            `;
+        item.innerHTML = `<button type="button" class="remove-button" title="Eliminar concepto">&times;</button><input type="text" class="concepto-titulo" placeholder="Título del Concepto (Ej: Administración)" required><textarea class="concepto-desc" placeholder="Descripción del concepto..." required></textarea>`;
         conceptosList.appendChild(item);
       });
-
-      // Bibliografía
       const biblioList = document.getElementById("biblio-list");
       document.getElementById("add-biblio").addEventListener("click", () => {
         const item = document.createElement("div");
         item.className = "dynamic-item";
-        item.innerHTML = `
-                <button type="button" class="remove-button" title="Eliminar referencia">&times;</button>
-                <textarea class="biblio-ref" rows="2" placeholder="Apellido, A. (Año). Título. Editorial." required></textarea>
-            `;
+        item.innerHTML = `<button type="button" class="remove-button" title="Eliminar referencia">&times;</button><textarea class="biblio-ref" rows="2" placeholder="Apellido, A. (Año). Título. Editorial." required></textarea>`;
         biblioList.appendChild(item);
       });
-
-      // Event Listeners para botones de eliminar (Control y Libertad)
       function setupRemoveListeners(listElement) {
-        listElement.addEventListener("click", function (e) {
-          if (e.target && e.target.classList.contains("remove-button")) {
-            e.target.closest(".dynamic-item").remove();
-          }
+        listElement.addEventListener("click", (e) => {
+          if (e.target?.classList.contains("remove-button"))
+            e.target.closest(".dynamic-item")?.remove();
         });
       }
       setupRemoveListeners(conceptosList);
       setupRemoveListeners(biblioList);
-
-      // Añade un par de conceptos y biblios por defecto
       document.getElementById("add-concepto").click();
       document.getElementById("add-biblio").click();
 
       // --- 4. MANEJO DE IMÁGENES ---
-
-      /** Lee un archivo y lo guarda como DataURL en nuestro imageStore */
       function handleImageUpload(event, storeKey) {
         const file = event.target.files[0];
-        if (!file) {
-          imageStore[storeKey] = null;
-          return;
-        }
+        imageStore[storeKey] = null;
+        if (!file) return;
         const reader = new FileReader();
         reader.onload = (e) => {
-          imageStore[storeKey] = e.target.result; // Guardamos el DataURL
+          imageStore[storeKey] = e.target.result;
         };
         reader.readAsDataURL(file);
       }
-
-      // Lógica para mostrar nombre de archivo
       function setupFileInput(inputId, spanId) {
         const input = document.getElementById(inputId);
         const span = document.getElementById(spanId);
         input.addEventListener("change", (e) => {
-          if (e.target.files.length > 0) {
-            span.textContent = e.target.files[0].name;
-          } else {
-            span.textContent = "";
-          }
+          span.textContent =
+            e.target.files.length > 0 ? e.target.files[0].name : "";
         });
       }
       setupFileInput("img-portada", "file-name-portada");
       setupFileInput("img-ensayo1", "file-name-ensayo1");
       setupFileInput("img-ensayo2", "file-name-ensayo2");
       setupFileInput("img-ensayo3", "file-name-ensayo3");
-
-      // Asigna los listeners a los inputs de archivos
       document
         .getElementById("img-portada")
         .addEventListener("change", (e) => handleImageUpload(e, "portada"));
@@ -915,19 +814,14 @@
         .addEventListener("change", (e) => handleImageUpload(e, "ensayo3"));
 
       // --- 5. LÓGICA DE GENERACIÓN DE PDF NATIVO ---
-
-      // Validación final antes de generar
       finishBtn.addEventListener("click", async () => {
         if (!validateStep(totalSteps)) {
           alert("Por favor, completa los campos requeridos en el último paso.");
           return;
         }
-
-        // Verifica todos los campos del formulario por si acaso
         const allRequiredFields = wizardForm.querySelectorAll("[required]");
         for (const field of allRequiredFields) {
           if (!field.checkValidity()) {
-            // Encuentra el paso al que pertenece el campo inválido
             const stepId = field.closest(".step-content").id;
             const stepNumber = parseInt(stepId.split("-")[1], 10);
             showStep(stepNumber);
@@ -938,8 +832,6 @@
             return;
           }
         }
-
-        // Si todo es válido, procede a generar el PDF
         generatePDF();
       });
 
@@ -951,19 +843,15 @@
           return;
         }
         const { jsPDF } = window.jspdf;
-
         finishBtn.disabled = true;
         finishBtn.textContent = "Generando...";
 
         try {
           const pdf = new jsPDF("p", "mm", "a4");
-
-          // Constantes de Diseño del PDF
           const PDF_AZUL = "#047835";
           const PDF_ROJO = "#7FBC03";
           const PDF_GRIS = "#6D6E71";
           const TEXTO_NORMAL = "#333";
-
           const MARGIN_LEFT = 20;
           const MARGIN_RIGHT = 20;
           const MARGIN_TOP = 25;
@@ -971,20 +859,16 @@
           const PAGE_WIDTH = pdf.internal.pageSize.getWidth();
           const PAGE_HEIGHT = pdf.internal.pageSize.getHeight();
           const CONTENT_WIDTH = PAGE_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
-
           let currentY = MARGIN_TOP;
 
-          // --- Lógica de PDF (Títulos y Saltos de Página) ---
           const addSectionTitle = (title) => {
             pdf.setFontSize(22);
             pdf.setFont("times", "bold");
             pdf.setTextColor(PDF_ROJO);
-
             let lines = pdf.splitTextToSize(title, CONTENT_WIDTH);
             let titleHeight = lines.length * 9;
-
-            checkPageBreak(titleHeight + 10);
-
+            checkPageBreak(titleHeight + 15); // Aumentado espacio necesario
+            currentY += 15; // --- CAMBIO: Espacio antes de la sección ---
             pdf.setDrawColor(PDF_ROJO);
             pdf.setLineWidth(1.5);
             pdf.line(
@@ -993,7 +877,6 @@
               MARGIN_LEFT - 2,
               currentY + titleHeight - 9
             );
-
             pdf.text(lines, MARGIN_LEFT, currentY);
             currentY += titleHeight + 6;
           };
@@ -1015,28 +898,49 @@
           };
 
           // --- INICIO DE CONSTRUCCIÓN DEL PDF ---
-          setupPage(); // Página 1 (Portada)
+          setupPage();
 
           // --- PASO 1: PORTADA ---
           const titulo = document.getElementById("titulo").value;
           const subtitulo = document.getElementById("subtitulo").value;
+          const bannerHeight = 60; // Altura del banner
+          const textBlockHeight =
+            pdf.splitTextToSize(titulo, CONTENT_WIDTH).length * 10 +
+            pdf.splitTextToSize(subtitulo, CONTENT_WIDTH).length * 7 +
+            10;
+          const imgHeight = imageStore.portada ? CONTENT_WIDTH * (7 / 16) : 0;
+          const totalContentHeight =
+            textBlockHeight + (imgHeight > 0 ? imgHeight + 10 : 0);
+
+          // --- CAMBIO: Centrado Vertical Portada ---
+          currentY = (PAGE_HEIGHT - totalContentHeight) / 2; // Calcula Y inicial para centrar
+          if (currentY < MARGIN_TOP) currentY = MARGIN_TOP; // Asegura que no se salga por arriba
+
+          // --- CAMBIO: Banner Superior ---
+          pdf.setFillColor(PDF_AZUL);
+          pdf.rect(0, currentY - 15, PAGE_WIDTH, bannerHeight + 15, "F"); // Dibuja banner (ajustado Y)
 
           pdf.setFontSize(30);
           pdf.setFont("times", "bold");
-          pdf.setTextColor(PDF_AZUL);
-          let lines = pdf.splitTextToSize(titulo, CONTENT_WIDTH);
-          pdf.text(lines, MARGIN_LEFT, currentY);
-          currentY += lines.length * 10;
+          pdf.setTextColor("#FFFFFF"); // Texto Blanco
+          let titleLines = pdf.splitTextToSize(titulo, CONTENT_WIDTH);
+          pdf.text(titleLines, PAGE_WIDTH / 2, currentY + 10, {
+            align: "center",
+          }); // Centrado horizontal
+          currentY += titleLines.length * 10 + 5;
 
           pdf.setFontSize(18);
           pdf.setFont("times", "normal");
-          pdf.setTextColor(PDF_GRIS);
-          lines = pdf.splitTextToSize(subtitulo, CONTENT_WIDTH);
-          pdf.text(lines, MARGIN_LEFT, currentY + 5);
-          currentY += lines.length * 7 + 10;
+          pdf.setTextColor("#FFFFFF"); // Texto Blanco
+          let subtitleLines = pdf.splitTextToSize(subtitulo, CONTENT_WIDTH);
+          pdf.text(subtitleLines, PAGE_WIDTH / 2, currentY + 5, {
+            align: "center",
+          }); // Centrado horizontal
+          currentY +=
+            subtitleLines.length * 7 + 15 + bannerHeight - textBlockHeight; // Ajusta Y después del banner
+          // --- FIN CAMBIO PORTADA ---
 
           if (imageStore.portada) {
-            const imgHeight = CONTENT_WIDTH * (7 / 16);
             checkPageBreak(imgHeight + 10);
             pdf.addImage(
               imageStore.portada,
@@ -1055,50 +959,42 @@
 
           // --- PASO 2: INTRODUCCIÓN ---
           addSectionTitle("Introducción");
-
           pdf.setFontSize(12);
           pdf.setFont("times", "normal");
           pdf.setTextColor(TEXTO_NORMAL);
           const intro = document.getElementById("texto-intro").value;
-          lines = pdf.splitTextToSize(intro, CONTENT_WIDTH);
-
+          let lines = pdf.splitTextToSize(intro, CONTENT_WIDTH);
           for (let line of lines) {
-            checkPageBreak(5);
+            checkPageBreak(8);
             pdf.text(line, MARGIN_LEFT, currentY, { align: "justify" });
-            currentY += 8; // Interlineado
+            currentY += 8;
           }
-          currentY += 10;
+          // currentY += 10; // Eliminado, addSectionTitle ya añade espacio
 
           // --- PASO 3: CONCEPTOS CLAVE ---
           addSectionTitle("Conceptos Clave");
-
           const conceptos = document.querySelectorAll(
             "#conceptos-list .dynamic-item"
           );
           for (let concepto of conceptos) {
             const cTitulo = concepto.querySelector(".concepto-titulo").value;
             const cDesc = concepto.querySelector(".concepto-desc").value;
-
-            if (!cTitulo && !cDesc) continue; // No añade conceptos vacíos
-
+            if (!cTitulo && !cDesc) continue;
             checkPageBreak(25);
-
             pdf.setDrawColor(PDF_AZUL);
             pdf.setLineWidth(1);
             pdf.line(MARGIN_LEFT, currentY - 5, MARGIN_LEFT, currentY + 1);
-
             pdf.setFontSize(15);
             pdf.setFont("times", "bold");
             pdf.setTextColor(PDF_AZUL);
             pdf.text(cTitulo, MARGIN_LEFT + 3, currentY);
             currentY += 8;
-
             pdf.setFontSize(12);
             pdf.setFont("times", "normal");
             pdf.setTextColor(TEXTO_NORMAL);
             lines = pdf.splitTextToSize(cDesc, CONTENT_WIDTH - 3);
             for (let line of lines) {
-              checkPageBreak(5);
+              checkPageBreak(8);
               pdf.text(line, MARGIN_LEFT + 3, currentY, { align: "justify" });
               currentY += 8;
             }
@@ -1123,34 +1019,30 @@
               img: imageStore.ensayo3,
             },
           ];
-
           for (let ensayo of ensayos) {
             const tituloEnsayo = document.getElementById(ensayo.t).value;
             const textoEnsayo = document.getElementById(ensayo.txt).value;
-
             if (tituloEnsayo || textoEnsayo) {
               addSectionTitle(tituloEnsayo);
-
               if (ensayo.img) {
-                const imgHeight = CONTENT_WIDTH * (7 / 16);
-                checkPageBreak(imgHeight + 10);
+                const imgH = CONTENT_WIDTH * (7 / 16);
+                checkPageBreak(imgH + 10);
                 pdf.addImage(
                   ensayo.img,
                   "PNG",
                   MARGIN_LEFT,
                   currentY,
                   CONTENT_WIDTH,
-                  imgHeight
+                  imgH
                 );
-                currentY += imgHeight + 10;
+                currentY += imgH + 10;
               }
-
               pdf.setFontSize(12);
               pdf.setFont("times", "normal");
               pdf.setTextColor(TEXTO_NORMAL);
               lines = pdf.splitTextToSize(textoEnsayo, CONTENT_WIDTH);
               for (let line of lines) {
-                checkPageBreak(5);
+                checkPageBreak(8);
                 pdf.text(line, MARGIN_LEFT, currentY, { align: "justify" });
                 currentY += 8;
               }
@@ -1159,7 +1051,6 @@
 
           // --- PASO 7: CONCLUSIONES ---
           addSectionTitle("Conclusiones");
-
           pdf.setFontSize(12);
           pdf.setFont("times", "normal");
           pdf.setTextColor(TEXTO_NORMAL);
@@ -1167,29 +1058,26 @@
             document.getElementById("texto-conclusiones").value;
           lines = pdf.splitTextToSize(conclusiones, CONTENT_WIDTH);
           for (let line of lines) {
-            checkPageBreak(5);
+            checkPageBreak(8);
             pdf.text(line, MARGIN_LEFT, currentY, { align: "justify" });
             currentY += 8;
           }
 
           // --- PASO 8: BIBLIOGRAFÍA ---
           addSectionTitle("Bibliografía");
-
           pdf.setFontSize(11);
           pdf.setFont("times", "normal");
           pdf.setTextColor(TEXTO_NORMAL);
-
           const referencias = document.querySelectorAll(
             "#biblio-list .biblio-ref"
           );
           for (let ref of referencias) {
             const refValue = ref.value;
-            if (!refValue) continue; // No añade referencias vacías
-
+            if (!refValue) continue;
             checkPageBreak(15);
             lines = pdf.splitTextToSize(refValue, CONTENT_WIDTH);
             for (let line of lines) {
-              checkPageBreak(5);
+              checkPageBreak(6.5);
               pdf.text(line, MARGIN_LEFT, currentY);
               currentY += 6.5;
             }
@@ -1202,10 +1090,8 @@
             pdf.setFontSize(10);
             pdf.setFont("times", "normal");
             pdf.setTextColor(PDF_GRIS);
-
             for (let i = 2; i <= totalPages; i++) {
               pdf.setPage(i);
-
               pdf.setDrawColor(PDF_AZUL);
               pdf.setLineWidth(0.5);
               pdf.line(
@@ -1214,7 +1100,6 @@
                 PAGE_WIDTH - MARGIN_RIGHT,
                 MARGIN_TOP - 10
               );
-
               pdf.text(
                 `Página ${i - 1}`,
                 PAGE_WIDTH - MARGIN_RIGHT,
@@ -1223,8 +1108,6 @@
               );
             }
           }
-          // ----------------------------------------------------
-
           // --- FIN: GUARDAR PDF ---
           pdf.save("documento_CUN_generado.pdf");
         } catch (error) {
@@ -1236,7 +1119,7 @@
           finishBtn.disabled = false;
           finishBtn.textContent = "Generar PDF";
         }
-      } // Fin de generatePDF
+      } // Fin generatePDF
     </script>
   </body>
 </html>
