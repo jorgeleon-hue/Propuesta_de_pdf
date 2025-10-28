@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generador de Documentos CUN (Asistente)</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+      /* --- Paleta CUN --- */
+      :root {
+        --cun-azul: #004a99;
+        --cun-rojo: #d9242b;
+        --cun-gris: #6d6e71;
+        --fondo-claro: #f8f9fa;
+        --texto-normal: #333;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f2f5;
+        color: var(--texto-normal);
+        line-height: 1.6;
+      }
+
+      /* --- Contenedor Principal del Asistente --- */
+      .wizard-container {
+        max-width: 850px;
+        margin: 2rem auto;
+        background-color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      /* --- 1. Barra de Progreso --- */
+      .progress-bar {
+        display: flex;
+        background-color: #eee;
+        border-bottom: 1px solid #ddd;
+      }
+      .progress-step {
+        flex: 1;
+        padding: 1rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--cun-gris);
+        border-right: 1px solid #ddd;
+        position: relative;
+      }
+      .progress-step:last-child {
+        border-right: none;
+      }
+
+      .progress-step.active {
+        background-color: #fff;
+        color: var(--cun-azul);
+        font-weight: bold;
+      }
+      .progress-step.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: var(--cun-azul);
+      }
+
+      /* --- 2. Contenido de los Pasos --- */
+      .wizard-content {
+        padding: 2.5rem 3rem;
+      }
+
+      .step-content {
+        display: none;
+      }
+      .step-content.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* --- 3. Campos de Formulario --- */
+      h3 {
+        font-size: 1.75rem;
+        color: var(--cun-rojo);
+        margin-top: 0;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--cun-rojo);
+        padding-left: 0.75rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: var(--cun-gris);
+      }
+
+      .form-group input[type="text"],
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-family: inherit;
+      }
+
+      .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+
+      .form-group input[type="file"] {
+        font-size: 0.9rem;
+      }
+
+      /* --- Estilos para items dinámicos (Conceptos, Biblio) --- */
+      .dynamic-list {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 0 1rem 1rem 1rem;
+      }
+      .dynamic-item {
+        padding: 1rem 0;
+        border-bottom: 1px dashed #ddd;
+      }
+      .dynamic-item:last-child {
+        border-bottom: none;
+      }
+
+      .dynamic-item input[type="text"],
+      .dynamic-item textarea {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-family: inherit;
+      }
+
+      .dynamic-item input[type="text"] {
+        margin-bottom: 0.5rem;
+      }
+
+      .add-button {
+        background-color: var(--cun-azul);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        margin-top: 1rem;
+      }
+      .add-button:hover {
+        background-color: #003a75;
+      }
+
+      /* --- 4. Navegación (Anterior/Siguiente) --- */
+      .wizard-navigation {
+        display: flex;
+        justify-content: space-between;
+        padding: 1.5rem 3rem;
+        border-top: 1px solid #eee;
+        background-color: var(--fondo-claro);
+      }
+
+      .wizard-button {
+        background-color: var(--cun-gris);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .wizard-button#next-btn,
+      .wizard-button#finish-btn {
+        background-color: var(--cun-rojo);
+      }
+
+      .wizard-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .wizard-button#prev-btn[style*="display: none;"] {
+        display: none !important;
+      }
+      .wizard-button#next-btn[style*="display: none;"] {
+        display: none !important;
+      }
+      .wizard-button#finish-btn[style*="display: none;"] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wizard-container">
+      <div class="progress-bar">
+        <div class="progress-step active" data-step="1">1. Portada</div>
+        <div class="progress-step" data-step="2">2. Introducción</div>
+        <div class="progress-step" data-step="3">3. Conceptos</div>
+        <div class="progress-step" data-step="4">4. Ensayo 1</div>
+        <div class="progress-step" data-step="5">5. Ensayo 2</div>
+        <div class="progress-step" data-step="6">6. Ensayo 3</div>
+        <div class="progress-step" data-step="7">7. Conclusiones</div>
+        <div class="progress-step" data-step="8">8. Bibliografía</div>
+      </div>
+
+      <div class="wizard-content">
+        <div id="step-1" class="step-content active">
+          <h3>Paso 1: Portada</h3>
+          <div class="form-group">
+            <label for="titulo">Título de la Portada</label>
+            <input
+              type="text"
+              id="titulo"
+              placeholder="Ej: Conceptos básicos de la administración"
+            />
+          </div>
+          <div class="form-group">
+            <label for="subtitulo">Subtítulo (Materia)</label>
+            <input
+              type="text"
+              id="subtitulo"
+              placeholder="Ej: Fundamentos de Administración Transversal"
+            />
+          </div>
+          <div class="form-group">
+            <label for="img-portada">Imagen de Portada (Opcional, 16:9)</label>
+            <input type="file" id="img-portada" accept="image/*" />
+          </div>
+        </div>
+
+        <div id="step-2" class="step-content">
+          <h3>Paso 2: Introducción</h3>
+          <div class="form-group">
+            <label for="texto-intro">Texto de la Introducción</label>
+            <textarea
+              id="texto-intro"
+              rows="10"
+              placeholder="Escribe aquí la introducción..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div id="step-3" class="step-content">
+          <h3>Paso 3: Conceptos Clave</h3>
+          <div id="conceptos-list" class="dynamic-list"></div>
+          <button id="add-concepto" class="add-button">
+            + Añadir Concepto
+          </button>
+        </div>
+
+        <div id="step-4" class="step-content">
+          <h3>Paso 4: Ensayo 1</h3>
+          <div class="form-group">
+            <label for="titulo-ensayo1">Título del Ensayo 1</label>
+            <input
+              type="text"
+              id="titulo-ensayo1"
+              placeholder="Ej: Fundamentos de la administración"
+            />
+          </div>
+          <div class="form-group">
+            <label for="texto-ensayo1">Texto del Ensayo 1</label>
+            <textarea id="texto-ensayo1" rows="8"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="img-ensayo1"
+              >Imagen del Ensayo 1 (Opcional, 16:9)</label
+            >
+            <input type="file" id="img-ensayo1" accept="image/*" />
+          </div>
+        </div>
+
+        <div id="step-5" class="step-content">
+          <h3>Paso 5: Ensayo 2</h3>
+          <div class="form-group">
+            <label for="titulo-ensayo2">Título del Ensayo 2</label>
+            <input
+              type="text"
+              id="titulo-ensayo2"
+              placeholder="Ej: La organización como sistema"
+            />
+          </div>
+          <div class="form-group">
+            <label for="texto-ensayo2">Texto del Ensayo 2</label>
+            <textarea id="texto-ensayo2" rows="8"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="img-ensayo2"
+              >Imagen del Ensayo 2 (Opcional, 16:9)</label
+            >
+            <input type="file" id="img-ensayo2" accept="image/*" />
+          </div>
+        </div>
+
+        <div id="step-6" class="step-content">
+          <h3>Paso 6: Ensayo 3</h3>
+          <div class="form-group">
+            <label for="titulo-ensayo3">Título del Ensayo 3</label>
+            <input
+              type="text"
+              id="titulo-ensayo3"
+              placeholder="Ej: Recurso humano y liderazgo"
+            />
+          </div>
+          <div class="form-group">
+            <label for="texto-ensayo3">Texto del Ensayo 3</label>
+            <textarea id="texto-ensayo3" rows="8"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="img-ensayo3"
+              >Imagen del Ensayo 3 (Opcional, 16:9)</label
+            >
+            <input type="file" id="img-ensayo3" accept="image/*" />
+          </div>
+        </div>
+
+        <div id="step-7" class="step-content">
+          <h3>Paso 7: Conclusiones</h3>
+          <div class="form-group">
+            <label for="texto-conclusiones">Texto de las Conclusiones</label>
+            <textarea id="texto-conclusiones" rows="10"></textarea>
+          </div>
+        </div>
+
+        <div id="step-8" class="step-content">
+          <h3>Paso 8: Bibliografía</h3>
+          <div id="biblio-list" class="dynamic-list"></div>
+          <button id="add-biblio" class="add-button">
+            + Añadir Referencia
+          </button>
+        </div>
+      </div>
+
+      <div class="wizard-navigation">
+        <button id="prev-btn" class="wizard-button">Anterior</button>
+        <button id="next-btn" class="wizard-button">Siguiente</button>
+        <button id="finish-btn" class="wizard-button" style="display: none">
+          Generar PDF
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // --- 1. CONFIGURACIÓN INICIAL ---
+      let currentStep = 1;
+      const totalSteps = 8;
+
+      // Almacenamiento de datos de imagen (para leerlos como DataURL)
+      const imageStore = {
+        portada: null,
+        ensayo1: null,
+        ensayo2: null,
+        ensayo3: null,
+      };
+
+      // --- 2. NAVEGACIÓN DEL ASISTENTE ---
+
+      const prevBtn = document.getElementById("prev-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const finishBtn = document.getElementById("finish-btn");
+      const progressSteps = document.querySelectorAll(".progress-step");
+      const stepContents = document.querySelectorAll(".step-content");
+
+      function showStep(stepNumber) {
+        // Oculta el paso actual
+        document
+          .querySelector(".step-content.active")
+          .classList.remove("active");
+        document
+          .querySelector(".progress-step.active")
+          .classList.remove("active");
+
+        // Muestra el nuevo paso
+        document.getElementById(`step-${stepNumber}`).classList.add("active");
+        document
+          .querySelector(`.progress-step[data-step="${stepNumber}"]`)
+          .classList.add("active");
+
+        // Actualiza los botones
+        prevBtn.disabled = stepNumber === 1;
+        nextBtn.style.display = stepNumber === totalSteps ? "none" : "block";
+        finishBtn.style.display = stepNumber === totalSteps ? "block" : "none";
+      }
+
+      nextBtn.addEventListener("click", () => {
+        if (currentStep < totalSteps) {
+          currentStep++;
+          showStep(currentStep);
+        }
+      });
+
+      prevBtn.addEventListener("click", () => {
+        if (currentStep > 1) {
+          currentStep--;
+          showStep(currentStep);
+        }
+      });
+
+      // Inicializa el estado de los botones
+      showStep(currentStep);
+
+      // --- 3. FUNCIONALIDAD DE LISTAS DINÁMICAS ---
+
+      // Conceptos Clave
+      const conceptosList = document.getElementById("conceptos-list");
+      document.getElementById("add-concepto").addEventListener("click", () => {
+        const item = document.createElement("div");
+        item.className = "dynamic-item";
+        item.innerHTML = `
+                <input type="text" class="concepto-titulo" placeholder="Título del Concepto (Ej: Administración)">
+                <textarea class="concepto-desc" placeholder="Descripción del concepto..."></textarea>
+            `;
+        conceptosList.appendChild(item);
+      });
+
+      // Bibliografía
+      const biblioList = document.getElementById("biblio-list");
+      document.getElementById("add-biblio").addEventListener("click", () => {
+        const item = document.createElement("div");
+        item.className = "dynamic-item";
+        item.innerHTML = `
+                <textarea class="biblio-ref" rows="2" placeholder="Apellido, A. (Año). Título. Editorial."></textarea>
+            `;
+        biblioList.appendChild(item);
+      });
+
+      // Añade un par de conceptos y biblios por defecto
+      document.getElementById("add-concepto").click();
+      document.getElementById("add-biblio").click();
+
+      // --- 4. MANEJO DE IMÁGENES ---
+
+      /** Lee un archivo y lo guarda como DataURL en nuestro imageStore */
+      function handleImageUpload(event, storeKey) {
+        const file = event.target.files[0];
+        if (!file) {
+          imageStore[storeKey] = null;
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imageStore[storeKey] = e.target.result; // Guardamos el DataURL
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // Asigna los listeners a los inputs de archivos
+      document
+        .getElementById("img-portada")
+        .addEventListener("change", (e) => handleImageUpload(e, "portada"));
+      document
+        .getElementById("img-ensayo1")
+        .addEventListener("change", (e) => handleImageUpload(e, "ensayo1"));
+      document
+        .getElementById("img-ensayo2")
+        .addEventListener("change", (e) => handleImageUpload(e, "ensayo2"));
+      document
+        .getElementById("img-ensayo3")
+        .addEventListener("change", (e) => handleImageUpload(e, "ensayo3"));
+
+      // --- 5. LÓGICA DE GENERACIÓN DE PDF NATIVO ---
+
+      finishBtn.addEventListener("click", async () => {
+        if (!window.jspdf) {
+          alert(
+            "Error: La librería PDF (jspdf) no se ha cargado. Revisa tu conexión a internet."
+          );
+          return;
+        }
+        const { jsPDF } = window.jspdf;
+
+        finishBtn.disabled = true;
+        finishBtn.textContent = "Generando...";
+
+        try {
+          const pdf = new jsPDF("p", "mm", "a4");
+
+          // --- Constantes de Diseño ---
+          const MARGIN_LEFT = 20;
+          const MARGIN_RIGHT = 20;
+          const MARGIN_TOP = 25;
+          const MARGIN_BOTTOM = 25;
+          const PAGE_WIDTH = pdf.internal.pageSize.getWidth();
+          const PAGE_HEIGHT = pdf.internal.pageSize.getHeight();
+          const CONTENT_WIDTH = PAGE_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
+
+          const CUN_AZUL = "#004A99";
+          const CUN_ROJO = "#D9242B";
+          const CUN_GRIS = "#6D6E71";
+          const TEXTO_NORMAL = "#333";
+
+          let currentY = MARGIN_TOP;
+
+          // --- CAMBIO 1: Función de Título mejorada ---
+          const addSectionTitle = (title) => {
+            pdf.setFontSize(22);
+            pdf.setFont("times", "bold");
+            pdf.setTextColor(CUN_ROJO);
+
+            // Divide el título en líneas si es muy largo
+            let lines = pdf.splitTextToSize(title, CONTENT_WIDTH);
+            let titleHeight = lines.length * 9; // 9mm por línea para fuente 22pt
+
+            checkPageBreak(titleHeight + 10); // Comprueba espacio para el título
+
+            // Dibuja la línea de diseño adaptándose a la altura del título
+            pdf.setDrawColor(CUN_ROJO);
+            pdf.setLineWidth(1.5);
+            pdf.line(
+              MARGIN_LEFT - 2,
+              currentY - 6,
+              MARGIN_LEFT - 2,
+              currentY + titleHeight - 9 // Ajusta la altura de la línea
+            );
+
+            // Dibuja el texto del título (ahora en líneas)
+            pdf.text(lines, MARGIN_LEFT, currentY);
+            currentY += titleHeight + 6; // Añade espacio después del título
+          };
+
+          // --- CAMBIO 3: Función checkPageBreak mejorada ---
+          const checkPageBreak = (spaceNeeded) => {
+            if (currentY + spaceNeeded > PAGE_HEIGHT - MARGIN_BOTTOM) {
+              pdf.addPage();
+              currentY = MARGIN_TOP;
+              // Asegura que las fuentes se re-apliquen en la nueva página
+              pdf.setFont("times", "normal");
+              pdf.setFontSize(12);
+              pdf.setTextColor(TEXTO_NORMAL);
+            }
+          };
+
+          // Función para preparar fuentes (reemplaza addWatermark)
+          const setupPage = () => {
+            pdf.setFont("times", "normal");
+            pdf.setFontSize(12);
+            pdf.setTextColor(TEXTO_NORMAL);
+          };
+
+          // --- INICIO DE CONSTRUCCIÓN DEL PDF ---
+          setupPage(); // Página 1 (Portada)
+
+          // --- PASO 1: PORTADA ---
+          const titulo = document.getElementById("titulo").value;
+          const subtitulo = document.getElementById("subtitulo").value;
+
+          pdf.setFontSize(30);
+          pdf.setFont("times", "bold");
+          pdf.setTextColor(CUN_AZUL);
+          let lines = pdf.splitTextToSize(titulo, CONTENT_WIDTH);
+          pdf.text(lines, MARGIN_LEFT, currentY);
+          currentY += lines.length * 10;
+
+          pdf.setFontSize(18);
+          pdf.setFont("times", "normal");
+          pdf.setTextColor(CUN_GRIS);
+          lines = pdf.splitTextToSize(subtitulo, CONTENT_WIDTH);
+          pdf.text(lines, MARGIN_LEFT, currentY + 5);
+          currentY += lines.length * 7 + 10;
+
+          if (imageStore.portada) {
+            const imgHeight = CONTENT_WIDTH * (7 / 16); // Altura de imagen reducida
+            checkPageBreak(imgHeight + 10);
+            pdf.addImage(
+              imageStore.portada,
+              "PNG",
+              MARGIN_LEFT,
+              currentY,
+              CONTENT_WIDTH,
+              imgHeight
+            );
+            currentY += imgHeight + 10;
+          }
+
+          pdf.addPage();
+          currentY = MARGIN_TOP;
+          setupPage(); // Prepara fuentes para página 2
+
+          // --- PASO 2: INTRODUCCIÓN ---
+          addSectionTitle("Introducción");
+
+          pdf.setFontSize(12);
+          pdf.setFont("times", "normal");
+          pdf.setTextColor(TEXTO_NORMAL);
+          const intro = document.getElementById("texto-intro").value;
+          lines = pdf.splitTextToSize(intro, CONTENT_WIDTH);
+
+          for (let line of lines) {
+            checkPageBreak(5);
+            // --- CAMBIO 2: Texto justificado ---
+            pdf.text(line, MARGIN_LEFT, currentY, { align: "justify" });
+            currentY += 8; // Interlineado
+          }
+          currentY += 10;
+
+          // --- PASO 3: CONCEPTOS CLAVE ---
+          addSectionTitle("Conceptos Clave");
+
+          const conceptos = document.querySelectorAll(
+            "#conceptos-list .dynamic-item"
+          );
+          for (let concepto of conceptos) {
+            const cTitulo = concepto.querySelector(".concepto-titulo").value;
+            const cDesc = concepto.querySelector(".concepto-desc").value;
+
+            checkPageBreak(25);
+
+            pdf.setDrawColor(CUN_AZUL);
+            pdf.setLineWidth(1);
+            pdf.line(MARGIN_LEFT, currentY - 5, MARGIN_LEFT, currentY + 1);
+
+            pdf.setFontSize(15);
+            pdf.setFont("times", "bold");
+            pdf.setTextColor(CUN_AZUL);
+            pdf.text(cTitulo, MARGIN_LEFT + 3, currentY);
+            currentY += 8;
+
+            pdf.setFontSize(12);
+            pdf.setFont("times", "normal");
+            pdf.setTextColor(TEXTO_NORMAL);
+            lines = pdf.splitTextToSize(cDesc, CONTENT_WIDTH - 3);
+            for (let line of lines) {
+              checkPageBreak(5);
+              // --- CAMBIO 2: Texto justificado ---
+              pdf.text(line, MARGIN_LEFT + 3, currentY, { align: "justify" });
+              currentY += 8; // Interlineado
+            }
+            currentY += 8;
+          }
+
+          // --- PASOS 4, 5, 6: ENSAYOS ---
+          const ensayos = [
+            {
+              t: "titulo-ensayo1",
+              txt: "texto-ensayo1",
+              img: imageStore.ensayo1,
+            },
+            {
+              t: "titulo-ensayo2",
+              txt: "texto-ensayo2",
+              img: imageStore.ensayo2,
+            },
+            {
+              t: "titulo-ensayo3",
+              txt: "texto-ensayo3",
+              img: imageStore.ensayo3,
+            },
+          ];
+
+          for (let ensayo of ensayos) {
+            const tituloEnsayo = document.getElementById(ensayo.t).value;
+            const textoEnsayo = document.getElementById(ensayo.txt).value;
+
+            if (tituloEnsayo || textoEnsayo) {
+              // Espacio eliminado, la función addSectionTitle lo maneja
+              addSectionTitle(tituloEnsayo);
+
+              if (ensayo.img) {
+                const imgHeight = CONTENT_WIDTH * (7 / 16); // Altura de imagen reducida
+                checkPageBreak(imgHeight + 10);
+                pdf.addImage(
+                  ensayo.img,
+                  "PNG",
+                  MARGIN_LEFT,
+                  currentY,
+                  CONTENT_WIDTH,
+                  imgHeight
+                );
+                currentY += imgHeight + 10;
+              }
+
+              pdf.setFontSize(12);
+              pdf.setFont("times", "normal");
+              pdf.setTextColor(TEXTO_NORMAL);
+              lines = pdf.splitTextToSize(textoEnsayo, CONTENT_WIDTH);
+              for (let line of lines) {
+                checkPageBreak(5);
+                // --- CAMBIO 2: Texto justificado ---
+                pdf.text(line, MARGIN_LEFT, currentY, { align: "justify" });
+                currentY += 8; // Interlineado
+              }
+            }
+          }
+
+          // --- PASO 7: CONCLUSIONES ---
+          addSectionTitle("Conclusiones");
+
+          pdf.setFontSize(12);
+          pdf.setFont("times", "normal");
+          pdf.setTextColor(TEXTO_NORMAL);
+          const conclusiones =
+            document.getElementById("texto-conclusiones").value;
+          lines = pdf.splitTextToSize(conclusiones, CONTENT_WIDTH);
+          for (let line of lines) {
+            checkPageBreak(5);
+            // --- CAMBIO 2: Texto justificado ---
+            pdf.text(line, MARGIN_LEFT, currentY, { align: "justify" });
+            currentY += 8; // Interlineado
+          }
+
+          // --- PASO 8: BIBLIOGRAFÍA ---
+          addSectionTitle("Bibliografía");
+
+          pdf.setFontSize(11);
+          pdf.setFont("times", "normal");
+          pdf.setTextColor(TEXTO_NORMAL);
+
+          const referencias = document.querySelectorAll(
+            "#biblio-list .biblio-ref"
+          );
+          for (let ref of referencias) {
+            checkPageBreak(15);
+            lines = pdf.splitTextToSize(ref.value, CONTENT_WIDTH);
+            for (let line of lines) {
+              checkPageBreak(5);
+              // La bibliografía se deja alineada a la izquierda (estándar)
+              pdf.text(line, MARGIN_LEFT, currentY);
+              currentY += 6.5;
+            }
+            currentY += 3;
+          }
+
+          // --- AÑADIR ENCABEZADO Y NÚMERO DE PÁGINA ---
+          const totalPages = pdf.internal.getNumberOfPages();
+          if (totalPages > 1) {
+            pdf.setFontSize(10);
+            pdf.setFont("times", "normal");
+            pdf.setTextColor(CUN_GRIS);
+
+            for (let i = 2; i <= totalPages; i++) {
+              pdf.setPage(i); // Cambia a la página 'i'
+
+              // Añadir línea de encabezado
+              pdf.setDrawColor(CUN_AZUL);
+              pdf.setLineWidth(0.5);
+              pdf.line(
+                MARGIN_LEFT,
+                MARGIN_TOP - 10,
+                PAGE_WIDTH - MARGIN_RIGHT,
+                MARGIN_TOP - 10
+              );
+
+              // Añadir número de página
+              pdf.text(
+                `Página ${i - 1}`, // i-1 porque la portada (pág 1) no lleva número
+                PAGE_WIDTH - MARGIN_RIGHT,
+                PAGE_HEIGHT - 15,
+                { align: "right" }
+              );
+            }
+          }
+          // ----------------------------------------------------
+
+          // --- FIN: GUARDAR PDF ---
+          pdf.save("documento_CUN_generado.pdf");
+        } catch (error) {
+          console.error("Error generando el PDF:", error);
+          alert(
+            "Hubo un error al generar el PDF. Revisa la consola para más detalles."
+          );
+        } finally {
+          finishBtn.disabled = false;
+          finishBtn.textContent = "Generar PDF";
+        }
+      });
+    </script>
+  </body>
+</html>
